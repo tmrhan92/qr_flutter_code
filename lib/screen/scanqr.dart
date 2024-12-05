@@ -77,23 +77,24 @@ class _CreateScreenState extends State<CreateScreen> {
                       onPressed: () async {
                         if (!knownPositions.contains(productPosition)) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("الموقع المدخل غير معروف!")),
+                            const SnackBar(content: Text("Invalid position!")),
                           );
                           return;
                         }
 
                         try {
-                          String id = DateTime.now().millisecondsSinceEpoch.toString();
-                          await ApiService.sendProductData(id, productName, productPosition, qrData);
+                          String productId = generateProductId(productName, productPosition);
+                          await ApiService.sendProductData(productId, productName, productPosition, qrData);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("تم حفظ المنتج بنجاح!")),
+                            const SnackBar(content: Text("Product saved successfully!")),
                           );
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("حدث خطأ أثناء الحفظ: $e")),
+                            SnackBar(content: Text("Error saving product: $e")),
                           );
                         }
                       },
+
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -114,12 +115,18 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 
   void updateQrString() {
+    String productId = generateProductId(productName, productPosition);
     qrData = jsonEncode({
       "productName": productName.isNotEmpty ? productName : "Unknown",
       "productPosition": productPosition.isNotEmpty ? productPosition : "Unknown",
-      "_id": DateTime.now().millisecondsSinceEpoch.toString(),
+      "_id": productId,
     });
   }
+
+  String generateProductId(String name, String position) {
+    return "${name.toLowerCase().replaceAll(RegExp(r'\s+'), '_')}_${position.toLowerCase().replaceAll(RegExp(r'\s+'), '_')}";
+  }
+
 
   Widget _buildTextField(String hintText, Function(String) onChanged) {
     return TextField(

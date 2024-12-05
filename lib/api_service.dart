@@ -28,47 +28,44 @@ class ApiService {
     }
   }
 
-  static Future<void> resetProductScanStatus() async {
-    if (!await hasConnection()) {
-      throw Exception("لا يوجد اتصال بالإنترنت.");
-    }
-
+  static Future<bool> resetProductScanStatus() async {
     try {
       final response = await http.patch(
-        Uri.parse('$baseUrl/products/reset'),
+        Uri.parse('${baseUrl}/products/reset'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'isScanned': false}),
       );
 
-      if (response.statusCode != 200) {
-        throw Exception('فشل في إعادة تعيين حالة المسح. كود الحالة: ${response.statusCode}');
-      }
+      return response.statusCode == 200; // Return true if successful
     } catch (e) {
-      print("خطأ في إعادة تعيين حالة المسح: $e");
-      throw Exception('حدث خطأ أثناء إعادة تعيين حالة المسح.');
+      print('Error: $e');
+      return false; // Return false on error
     }
   }
 
   static Future<void> sendProductData(String id, String name, String position, String qr) async {
     if (!await hasConnection()) {
-      throw Exception("لا يوجد اتصال بالإنترنت.");
+      throw Exception("No internet connection");
     }
 
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/products'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'_id': id, 'name': name, 'position': position, 'qr': qr}),
+        body: jsonEncode({
+          'name': name,
+          'position': position,
+          'qr': qr
+        }),
       );
 
       if (response.statusCode == 409) {
-        throw Exception('المنتج موجود بالفعل');
+        throw Exception('Product already exists');
       } else if (response.statusCode != 201) {
-        throw Exception('فشل في حفظ المنتج. كود الحالة: ${response.statusCode}');
+        throw Exception('Failed to save product. Status: ${response.statusCode}');
       }
     } catch (e) {
-      print("خطأ أثناء إرسال بيانات المنتج: $e");
-      throw Exception('حدث خطأ أثناء إرسال بيانات المنتج.');
+      print("Error sending product data: $e");
+      throw Exception('Error occurred while sending product data.');
     }
   }
 

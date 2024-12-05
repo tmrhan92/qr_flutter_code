@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../api_service.dart';
 import 'package:barcode_widget/barcode_widget.dart';
-import 'UnscannedProductsPage.dart';
+
+
+
 
 class PositionPage extends StatefulWidget {
   final Function(String) onProductScanned;
@@ -94,8 +96,9 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
         SnackBar(content: Text('تم إعادة تعيين جميع المنتجات إلى غير مسحوبة!')),
       );
     } catch (error) {
+      print('Reset Error: $error'); // Add this line
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('خطأ في إعادة تعيين حالة المنتجات.')),
+        SnackBar(content: Text('خطأ في إعادة تعيين حالة المنتجات: $error')),
       );
     }
   }
