@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import '../api_service.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 
-
-
-
 class PositionPage extends StatefulWidget {
   final Function(String) onProductScanned;
 
@@ -87,21 +84,32 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
 
   void resetAllProducts() async {
     try {
-      await ApiService.resetProductScanStatus();
-      setState(() {
-        scannedProducts.clear();
-      });
-      fetchProducts();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('تم إعادة تعيين جميع المنتجات إلى غير مسحوبة!')),
-      );
+      final success = await ApiService.resetProductScanStatus(); // استدعاء الدالة لإعادة تعيين الحالة
+      if (success) {
+        setState(() {
+          scannedProducts.clear(); // إعادة تعيين قائمة المنتجات الممسوحة
+          categorizedProducts.forEach((key, products) {
+            // تحديث حالة جميع المنتجات
+            for (var product in products) {
+              product['isScanned'] = false; // تحديث حالة المنتج
+            }
+          });
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('تم إعادة تعيين جميع المنتجات إلى غير مسحوبة!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('فشل في إعادة تعيين حالة المنتجات.')),
+        );
+      }
     } catch (error) {
-      print('Reset Error: $error'); // Add this line
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('خطأ في إعادة تعيين حالة المنتجات: $error')),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,10 +120,10 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
-          indicatorColor: Colors.red,
+          indicatorColor: Color(0xFF0B0D25),
           labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           unselectedLabelColor: Colors.white70,
-          labelColor: Colors.red,
+          labelColor: Colors.purple,
           tabs: const [
             Tab(text: 'Top'),
             Tab(text: 'Users'),
@@ -129,13 +137,6 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.red, Colors.black],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
         child: Column(
           children: [
             ElevatedButton(
@@ -161,7 +162,7 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
                       children: [
                         Text(
                           category,
-                          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.transparent),
                         ),
                         const SizedBox(height: 16),
                         GridView.builder(
@@ -218,7 +219,7 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
                                         icon: const Icon(Icons.delete, size: 10),
                                         label: const Text('حذف المنتج'),
                                         style: ElevatedButton.styleFrom(
-                                          primary: Colors.redAccent,
+                                          primary: Colors.purple,
                                           onPrimary: Colors.white,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8),

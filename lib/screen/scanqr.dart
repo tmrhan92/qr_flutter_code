@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../api_service.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -24,13 +25,7 @@ class _CreateScreenState extends State<CreateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.red.shade700],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+
         child: Column(
           children: [
             AppBar(
@@ -47,15 +42,36 @@ class _CreateScreenState extends State<CreateScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    BarcodeWidget(
-                      data: qrData,
-                      barcode: Barcode.qrCode(),
-                      color: Colors.white,
-                      height: 250,
-                      width: 250,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(12),
+                    const Text(
+                      "Create a product\nQR - code",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // BarcodeWidget(
+                    //   data: qrData,
+                    //   barcode: Barcode.qrCode(),
+                    //   color: Colors.white,
+                    //   height: 250,
+                    //   width: 250,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.black,
+                    //     borderRadius: BorderRadius.circular(12),
+                    //   ),
+                    // ),
+                    const SizedBox(height: 20),
+
+                    QrImageView(
+                      data: qrData, // Your QR code data
+                      version: QrVersions.auto,
+                      size: 200.0,
+                      backgroundColor: Colors.white,
+                      embeddedImage: AssetImage('assets/t-rex.png'), // Optional embedded image
+                      embeddedImageStyle: QrEmbeddedImageStyle(
+                        size: Size(40, 40),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -96,7 +112,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       },
 
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
+                        primary: Colors.purple,
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),

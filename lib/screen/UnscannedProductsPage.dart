@@ -68,11 +68,7 @@ class _UnscannedProductsPageState extends State<UnscannedProductsPage> {
           ? Center(child: CircularProgressIndicator())
           : Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.red, Colors.black],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+
         ),
         child: ListView.builder(
           padding: const EdgeInsets.all(8.0),
@@ -95,7 +91,7 @@ class _UnscannedProductsPageState extends State<UnscannedProductsPage> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.red,
+                        color: Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -119,7 +115,10 @@ class _UnscannedProductsPageState extends State<UnscannedProductsPage> {
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton(
-                      onPressed: () => deleteUnscannedProduct(product['_id']),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.purple,
+                      ),
+                        onPressed: () => deleteUnscannedProduct(product['_id']),
                       child: const Text('حذف المنتج'),
                     ),
                   ],

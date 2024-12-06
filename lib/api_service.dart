@@ -28,19 +28,23 @@ class ApiService {
     }
   }
 
+  // Reset Product Scan Status
+// في ApiService.dart
   static Future<bool> resetProductScanStatus() async {
     try {
       final response = await http.patch(
-        Uri.parse('${baseUrl}/products/reset'),
+        Uri.parse('$baseUrl/products/reset'),
         headers: {'Content-Type': 'application/json'},
       );
 
-      return response.statusCode == 200; // Return true if successful
+      return response.statusCode == 200;
     } catch (e) {
-      print('Error: $e');
-      return false; // Return false on error
+      print('Error in resetProductScanStatus: $e'); // طباعة أي أخطاء
+      return false; // العودة بالخطأ
     }
   }
+
+
 
   static Future<void> sendProductData(String id, String name, String position, String qr) async {
     if (!await hasConnection()) {

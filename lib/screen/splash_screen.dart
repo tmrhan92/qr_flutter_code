@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsec/screen/home-app.dart';
 import 'home_page_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     Future.delayed(Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage(title: 'Scanner App')),
+        MaterialPageRoute(builder: (context) => ProductApp()),
       );
     });
   }
@@ -45,7 +46,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.black,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -68,13 +68,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
               const Icon(
                 Icons.qr_code_scanner,
                 size: 100,
                 color: Colors.red,
               ),
-              SizedBox(height: 20),
               SlideTransition(
                 position: _slideAnimation,
                 child: const Text(
@@ -93,7 +91,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ),
                 ),
               ),
-              SizedBox(height: 10),
               const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                 strokeWidth: 2,

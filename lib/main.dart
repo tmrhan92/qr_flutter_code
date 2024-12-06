@@ -11,8 +11,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scanner App',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        scaffoldBackgroundColor: const Color(0xFF0B0D25),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF1E284F),
+          selectedItemColor: Colors.purple,
+          unselectedItemColor: Colors.grey,
+          elevation: 10,
+        ),
       ),
+      darkTheme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFF0B0D25),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF1E284F),
+          selectedItemColor: Colors.purple,
+          unselectedItemColor: Colors.grey,
+        ),
+      ),
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );
