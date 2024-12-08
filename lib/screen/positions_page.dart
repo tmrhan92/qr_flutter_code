@@ -84,17 +84,18 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
 
   void resetAllProducts() async {
     try {
-      final success = await ApiService.resetProductScanStatus(); // استدعاء الدالة لإعادة تعيين الحالة
+      final success = await ApiService.resetProductScanStatus();
       if (success) {
+        // إعادة تعيين الحالة ومتابعة تحديث UI
         setState(() {
-          scannedProducts.clear(); // إعادة تعيين قائمة المنتجات الممسوحة
+          scannedProducts.clear();
           categorizedProducts.forEach((key, products) {
-            // تحديث حالة جميع المنتجات
             for (var product in products) {
               product['isScanned'] = false; // تحديث حالة المنتج
             }
           });
         });
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('تم إعادة تعيين جميع المنتجات إلى غير مسحوبة!')),
         );
@@ -104,8 +105,9 @@ class _PositionPageState extends State<PositionPage> with SingleTickerProviderSt
         );
       }
     } catch (error) {
+      print('حدث خطأ أثناء إعادة تعيين الحالة: $error');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('خطأ في إعادة تعيين حالة المنتجات: $error')),
+        SnackBar(content: Text('خطأ في إعادة تعيين الحالة: $error')),
       );
     }
   }

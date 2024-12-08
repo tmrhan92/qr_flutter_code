@@ -61,7 +61,7 @@ class _UnscannedProductsPageState extends State<UnscannedProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('المنتجات غير الممسوحة'),
+        title: Text(' Unscanned Products '),
         backgroundColor: Colors.black,
       ),
       body: unscannedProducts.isEmpty
@@ -113,14 +113,14 @@ class _UnscannedProductsPageState extends State<UnscannedProductsPage> {
                       height: 100,
                       width: 100,
                     ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple,
-                      ),
-                        onPressed: () => deleteUnscannedProduct(product['_id']),
-                      child: const Text('حذف المنتج'),
-                    ),
+                    const SizedBox(height: 15),
+                    // ElevatedButton(
+                    //   style: ElevatedButton.styleFrom(
+                    //     primary: Colors.purple,
+                    //   ),
+                    //     onPressed: () => deleteUnscannedProduct(product['_id']),
+                    //   child: const Text('حذف المنتج'),
+                    // ),
                   ],
                 ),
               ),

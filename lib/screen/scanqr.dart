@@ -19,6 +19,10 @@ class _CreateScreenState extends State<CreateScreen> {
     'Users',
     'Videos',
     'Sounds',
+    'Top1',
+    'Users1',
+    'Videos1',
+    'Sounds1',
   ];
 
   @override
@@ -69,7 +73,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       version: QrVersions.auto,
                       size: 200.0,
                       backgroundColor: Colors.white,
-                      embeddedImage: AssetImage('assets/t-rex.png'), // Optional embedded image
+                     // embeddedImage: AssetImage('assets/t-rex.png'), // Optional embedded image
                       embeddedImageStyle: QrEmbeddedImageStyle(
                         size: Size(40, 40),
                       ),

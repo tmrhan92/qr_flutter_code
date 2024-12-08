@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.initState();
 
     _controller = AnimationController(
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 5),
       vsync: this,
     );
 
@@ -50,28 +50,33 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SlideTransition(
-                position: _slideAnimation,
-                child: const Text(
-                  'TSEC',
-                  style: TextStyle(
-                    fontSize: 64,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 5.0,
-                        color: Colors.black,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
+
+              // SlideTransition(
+              //   position: _slideAnimation,
+              //   child: const Text(
+              //     'TSEC',
+              //     style: TextStyle(
+              //       fontSize: 64,
+              //       fontWeight: FontWeight.bold,
+              //       color: Colors.red,
+              //       shadows: [
+              //         Shadow(
+              //           blurRadius: 5.0,
+              //           color: Colors.black,
+              //           offset: Offset(2.0, 2.0),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              Container(
+                height: 300,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/tsec.png'), // تأكد من المسار الصحيح
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              const Icon(
-                Icons.qr_code_scanner,
-                size: 100,
-                color: Colors.red,
               ),
               SlideTransition(
                 position: _slideAnimation,

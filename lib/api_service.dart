@@ -29,7 +29,6 @@ class ApiService {
   }
 
   // Reset Product Scan Status
-// في ApiService.dart
   static Future<bool> resetProductScanStatus() async {
     try {
       final response = await http.patch(

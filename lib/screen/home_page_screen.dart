@@ -1,149 +1,125 @@
-// import 'package:flutter/material.dart';
-// import 'package:tsec/screen/scanqr.dart';
-// import 'UnscannedProductsPage.dart';
-// import 'qr_scanner_page.dart';
-// import 'positions_page.dart';
-//
-// class MyHomePage extends StatefulWidget {
-//   final String title;
-//
-//   const MyHomePage({Key? key, required this.title}) : super(key: key);
-//
-//   @override
-//   _MyHomePageState createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   List<String> scannedProducts = []; // قائمة لتتبع المنتجات الممسوحة
-//
-//   void updateProductStatus(String productId) {
-//     print('Product with ID $productId has been scanned and updated.');
-//
-//     setState(() {
-//       scannedProducts.add(productId);
-//     });
-//   }
-//
-//   void resetProductStatus(String productId) {
-//     setState(() {
-//       scannedProducts.remove(productId);
-//     });
-//   }
-//
-//   void deleteUnscannedProduct(String productId) {
-//     setState(() {
-//       scannedProducts.remove(productId);
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.title),
-//         backgroundColor: Colors.black,
-//       ),
-//       body: Container(
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//             colors: [Colors.black, Colors.red.shade700],
-//             begin: Alignment.topCenter,
-//             end: Alignment.bottomCenter,
-//           ),
-//         ),
-//         child: Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               const Icon(
-//                 Icons.qr_code_scanner,
-//                 size: 100,
-//                 color: Colors.amber,
-//               ),
-//               const SizedBox(height: 20),
-//               const Text(
-//                 'الترك للسلامة العامة والاستشارات',
-//                 style: TextStyle(
-//                   fontSize: 24,
-//                   fontWeight: FontWeight.bold,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//               const SizedBox(height: 40),
-//               ElevatedButton.icon(
-//                 icon: const Icon(Icons.qr_code, size: 20, color: Colors.red),
-//                 label: const Text('Create QR Code'),
-//                 style: ElevatedButton.styleFrom(
-//                   primary: Colors.black,
-//                   onPrimary: Colors.white,
-//                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(30),
-//                   ),
-//                 ),
-//                 onPressed: () {
-//                   Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => CreateScreen()));
-//                 },
-//               ),
-//               const SizedBox(height: 20),
-//               ElevatedButton.icon(
-//                 icon: const Icon(Icons.camera_alt, size: 20, color: Colors.red),
-//                 label: const Text('Read QR Code'),
-//                 style: ElevatedButton.styleFrom(
-//                   primary: Colors.black,
-//                   onPrimary: Colors.white,
-//                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(30),
-//                   ),
-//                 ),
-//                 onPressed: () {
-//                   Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => QRScannerPage(
-//                     onProductScanned: updateProductStatus,
-//                     onProductDeleted: deleteUnscannedProduct,
-//                   )));
-//                 },
-//               ),
-//               const SizedBox(height: 20),
-//               ElevatedButton.icon(
-//                 icon: const Icon(Icons.location_on, size: 20, color: Colors.red),
-//                 label: const Text('Position Screen'),
-//                 style: ElevatedButton.styleFrom(
-//                   primary: Colors.black,
-//                   onPrimary: Colors.white,
-//                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(30),
-//                   ),
-//                 ),
-//                 onPressed: () {
-//                   Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => PositionPage(
-//                     onProductScanned: updateProductStatus,
-//                   )));
-//                 },
-//               ),
-//               const SizedBox(height: 20),
-//               ElevatedButton.icon(
-//                 icon: const Icon(Icons.list, size: 20, color: Colors.red),
-//                 label: const Text('Unscanned Products'),
-//                 style: ElevatedButton.styleFrom(
-//                   primary: Colors.black,
-//                   onPrimary: Colors.white,
-//                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(30),
-//                   ),
-//                 ),
-//                 onPressed: () {
-//                   Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => UnscannedProductsPage(
-//                     onProductDeleted: deleteUnscannedProduct,
-//                   )));
-//                 },
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0B0D25), // خلفية داكنة
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+
+            Stack(
+              children: [
+                Container(
+                  height: 300,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/safty.png'), // تأكد من المسار الصحيح
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 300,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Color(0xFF0B0D25),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            // الكارد لمعلومات المنتج
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E284F),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black54,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // العنوان والتقييمات
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "مؤسسة الترك للسلامة العامة والاستشارات",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Icon(
+                        Icons.favorite_border,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "الاردن_الكرك. شارع الزراعة",
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade300),
+                    textAlign: TextAlign.right, // تحديد اتجاه النص من اليمين إلى اليسار
+
+                  ),
+                  const SizedBox(height: 8),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // محاذاة العناصر في الوسط
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.phone, color: Colors.purple, size: 20),
+                      SizedBox(width: 5),
+                      Text(
+                        "+962 790 696121",
+                        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+
+                  Center(
+                    child:  QrImageView(
+                      data: '', // Your QR code data
+                      version: QrVersions.auto,
+                      size: 200.0,
+                      backgroundColor: Colors.white,
+                      //embeddedImage: AssetImage('assets/t-rex.png'), // Optional embedded image
+                      embeddedImageStyle: QrEmbeddedImageStyle(
+                        size: Size(40, 40),
+
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
