@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'login.dart';
 
 class Home extends StatelessWidget {
+  final FlutterSecureStorage storage = FlutterSecureStorage(); // تعريف الـ storage
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,7 +13,6 @@ class Home extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             Stack(
               children: [
                 Container(
@@ -36,7 +39,6 @@ class Home extends StatelessWidget {
                 ),
               ],
             ),
-
             // الكارد لمعلومات المنتج
             Container(
               padding: const EdgeInsets.all(16.0),
@@ -78,7 +80,6 @@ class Home extends StatelessWidget {
                     "الاردن_الكرك. شارع الزراعة",
                     style: TextStyle(fontSize: 16, color: Colors.grey.shade300),
                     textAlign: TextAlign.right, // تحديد اتجاه النص من اليمين إلى اليسار
-
                   ),
                   const SizedBox(height: 8),
                   const Row(
@@ -95,25 +96,35 @@ class Home extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-
-
                   Center(
-                    child:  QrImageView(
+                    child: QrImageView(
                       data: '', // Your QR code data
                       version: QrVersions.auto,
                       size: 200.0,
                       backgroundColor: Colors.white,
-                      //embeddedImage: AssetImage('assets/t-rex.png'), // Optional embedded image
                       embeddedImageStyle: QrEmbeddedImageStyle(
                         size: Size(40, 40),
-
                       ),
                     ),
                   ),
-
+                  SizedBox(height: 10,),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await storage.delete(key: 'user_token');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purple,
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: const Text('تسجيل الخروج'),
+                  ),
                   const SizedBox(height: 16),
-
-
                 ],
               ),
             ),

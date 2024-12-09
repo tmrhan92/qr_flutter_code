@@ -16,7 +16,7 @@ class _ProductAppState extends State<ProductApp> {
 
   // قائمة الصفحات
   final List<Widget> _pages = [
-    CreateScreen(),
+    CreateScreen(refreshPositions: () {  },),
     QRScannerPage(onProductScanned: (String) {}, onProductDeleted: (String) {}),
     Home(),
     PositionPage(onProductScanned: (String) {}),

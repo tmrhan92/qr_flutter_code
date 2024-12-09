@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../api_service.dart';
 
 class CreateScreen extends StatefulWidget {
+  final VoidCallback refreshPositions; // Callback لإعادة تحميل المواقع
+
+  CreateScreen({required this.refreshPositions});
+
   @override
   _CreateScreenState createState() => _CreateScreenState();
 }
@@ -13,23 +16,37 @@ class _CreateScreenState extends State<CreateScreen> {
   String productName = '';
   String productPosition = '';
   String qrData = '';
+  List<String> availablePositions = []; // المواقع المحملة ديناميكيًا
+  bool isLoading = true;
 
-  final List<String> knownPositions = [
-    'Top',
-    'Users',
-    'Videos',
-    'Sounds',
-    'Top1',
-    'Users1',
-    'Videos1',
-    'Sounds1',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    fetchPositions();
+  }
+
+  // جلب المواقع من API
+  void fetchPositions() async {
+    try {
+      List<String> positions = await ApiService.fetchLocations();
+      setState(() {
+        availablePositions = positions;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching positions: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-
+      body: isLoading
+          ? Center(child: CircularProgressIndicator()) // عرض مؤشر تحميل أثناء جلب المواقع
+          : Container(
         child: Column(
           children: [
             AppBar(
@@ -38,7 +55,7 @@ class _CreateScreenState extends State<CreateScreen> {
               elevation: 0,
               centerTitle: true,
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20.0),
@@ -55,28 +72,13 @@ class _CreateScreenState extends State<CreateScreen> {
                         color: Colors.white,
                       ),
                     ),
-                    // BarcodeWidget(
-                    //   data: qrData,
-                    //   barcode: Barcode.qrCode(),
-                    //   color: Colors.white,
-                    //   height: 250,
-                    //   width: 250,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.black,
-                    //     borderRadius: BorderRadius.circular(12),
-                    //   ),
-                    // ),
                     const SizedBox(height: 20),
-
                     QrImageView(
-                      data: qrData, // Your QR code data
+                      data: qrData,
                       version: QrVersions.auto,
                       size: 200.0,
                       backgroundColor: Colors.white,
-                     // embeddedImage: AssetImage('assets/t-rex.png'), // Optional embedded image
-                      embeddedImageStyle: QrEmbeddedImageStyle(
-                        size: Size(40, 40),
-                      ),
+                      embeddedImageStyle: QrEmbeddedImageStyle(size: Size(40, 40)),
                     ),
                     const SizedBox(height: 20),
                     _buildTextField('Enter Product Name', (val) {
@@ -86,35 +88,36 @@ class _CreateScreenState extends State<CreateScreen> {
                       });
                     }),
                     const SizedBox(height: 20),
-                    _buildTextField('Enter Product Position', (val) {
-                      setState(() {
-                        productPosition = val.trim();
-                        updateQrString();
-                      });
-                    }),
+                    _buildDropdown(),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
-                        if (!knownPositions.contains(productPosition)) {
+                        if (productPosition.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Invalid position!")),
+                            const SnackBar(content: Text("Please select a position!")),
                           );
                           return;
                         }
 
                         try {
                           String productId = generateProductId(productName, productPosition);
-                          await ApiService.sendProductData(productId, productName, productPosition, qrData);
+                          await ApiService.sendProductData(
+                            productId,
+                            productName,
+                            productPosition,
+                            qrData,
+                          );
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Product saved successfully!")),
                           );
+                          widget.refreshPositions(); // تحديث صفحة المواقع
+                          Navigator.pop(context); // العودة إلى الصفحة السابقة
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Error saving product: $e")),
                           );
                         }
                       },
-
                       style: ElevatedButton.styleFrom(
                         primary: Colors.purple,
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -147,6 +150,35 @@ class _CreateScreenState extends State<CreateScreen> {
     return "${name.toLowerCase().replaceAll(RegExp(r'\s+'), '_')}_${position.toLowerCase().replaceAll(RegExp(r'\s+'), '_')}";
   }
 
+  Widget _buildDropdown() {
+    return DropdownButtonFormField<String>(
+      value: productPosition.isEmpty ? null : productPosition,
+      onChanged: (value) {
+        setState(() {
+          productPosition = value ?? '';
+          updateQrString();
+        });
+      },
+      decoration: InputDecoration(
+        hintText: 'Select Product Position',
+        filled: true,
+        fillColor: Colors.black,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      dropdownColor: Colors.black,
+      items: availablePositions.map((position) {
+        return DropdownMenuItem(
+          value: position,
+          child: Text(
+            position,
+            style: const TextStyle(color: Colors.white),
+          ),
+        );
+      }).toList(),
+    );
+  }
 
   Widget _buildTextField(String hintText, Function(String) onChanged) {
     return TextField(

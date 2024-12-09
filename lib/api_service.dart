@@ -27,6 +27,15 @@ class ApiService {
       throw Exception('حدث خطأ أثناء جلب المنتجات.');
     }
   }
+  static Future<List<String>> fetchLocations() async {
+    final response = await http.get(Uri.parse('$baseUrl/locations'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return List<String>.from(data.map((item) => item['name']));
+    } else {
+      throw Exception('فشلت في تحميل المواقع.');
+    }
+  }
 
   // Reset Product Scan Status
   static Future<bool> resetProductScanStatus() async {

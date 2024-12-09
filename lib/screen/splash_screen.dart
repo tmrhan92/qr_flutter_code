@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsec/screen/home-app.dart';
 import 'home_page_screen.dart';
+import 'login.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.initState();
 
     _controller = AnimationController(
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 59),
       vsync: this,
     );
 
@@ -31,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     Future.delayed(Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => ProductApp()),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     });
   }
